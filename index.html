@@ -22,10 +22,18 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 1.5rem;
+      padding: clamp(1.25rem, 4vw, 2rem) clamp(0.75rem, 3vw, 1.5rem);
       background: #f4e4e1;
       color: #5a4548;
       font-family: Georgia, "Times New Roman", serif;
+    }
+
+    main {
+      width: min(100%, 36rem);
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      gap: clamp(1rem, 3vw, 1.5rem);
     }
 
     h1 {
@@ -35,10 +43,181 @@
       font-weight: 500;
       line-height: 1.35;
       text-align: center;
+      text-wrap: balance;
+    }
+
+    #countdown {
+      width: 100%;
+    }
+
+    .lead,
+    .greeting {
+      margin: 0 auto;
+      max-width: 22em;
+      font-size: clamp(1.05rem, 3.8vw, 1.35rem);
+      font-weight: 500;
+      line-height: 1.45;
+      text-align: center;
+      text-wrap: balance;
+    }
+
+    .greeting {
+      font-size: clamp(1.35rem, 4.8vw, 1.85rem);
+      line-height: 1.35;
+    }
+
+    .units {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: clamp(0.35rem, 1.6vw, 0.85rem);
+      width: 100%;
+      max-width: 32rem;
+      margin: clamp(0.85rem, 2.5vw, 1.15rem) auto 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .unit {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0.25rem;
+      min-width: 0;
+      padding: 0.6rem 0.15rem 0.5rem;
+      background: #fff7f5;
+      border: 1px solid #ead7d3;
+      border-radius: 0.9rem;
+      box-shadow: 0 8px 18px rgba(90, 69, 72, 0.07);
+    }
+
+    .num {
+      font-variant-numeric: tabular-nums;
+      font-size: clamp(1.5rem, 7vw, 2.5rem);
+      line-height: 1;
+      color: #7d4b56;
+      white-space: nowrap;
+    }
+
+    .label {
+      font-size: clamp(0.75rem, 3vw, 0.95rem);
+      line-height: 1.2;
+      text-align: center;
+      white-space: nowrap;
+    }
+
+    @media (min-width: 720px) {
+      .unit {
+        padding: 0.95rem 0.35rem 0.75rem;
+        border-radius: 1.05rem;
+      }
     }
   </style>
 </head>
 <body>
-  <h1>Скоро здесь будет сюрприз 🎈</h1>
+  <main>
+    <h1>Скоро здесь будет сюрприз&nbsp;🎈</h1>
+    <div id="countdown" hidden>
+      <p class="lead">До дня рождения Ульяны осталось:</p>
+      <ul class="units">
+        <li class="unit">
+          <span class="num" id="days">00</span>
+          <span class="label" id="days-label">дней</span>
+        </li>
+        <li class="unit">
+          <span class="num" id="hours">00</span>
+          <span class="label" id="hours-label">часов</span>
+        </li>
+        <li class="unit">
+          <span class="num" id="minutes">00</span>
+          <span class="label" id="minutes-label">минут</span>
+        </li>
+        <li class="unit">
+          <span class="num" id="seconds">00</span>
+          <span class="label" id="seconds-label">секунд</span>
+        </li>
+      </ul>
+    </div>
+    <p class="greeting" id="greeting" hidden>Ульяна, с днём рождения!&nbsp;🎉</p>
+  </main>
+  <script>
+    (function () {
+      // Fixed +03:00 so Moscow midnight is the same instant in every timezone.
+      var TARGET_MS = Date.parse("2026-11-22T00:00:00+03:00");
+
+      function plural(n, one, few, many) {
+        var abs = Math.abs(Math.trunc(n)) % 100;
+        var last = abs % 10;
+        if (last === 1 && abs !== 11) return one;
+        if (last >= 2 && last <= 4 && (abs < 12 || abs > 14)) return few;
+        return many;
+      }
+
+      function remainingParts(nowMs, targetMs) {
+        var diff = targetMs - nowMs;
+        if (!(diff > 0)) return null;
+        var total = Math.floor(diff / 1000);
+        return {
+          days: Math.floor(total / 86400),
+          hours: Math.floor((total % 86400) / 3600),
+          minutes: Math.floor((total % 3600) / 60),
+          seconds: total % 60
+        };
+      }
+
+      function pad(n) {
+        return String(n).padStart(2, "0");
+      }
+
+      var countdown = document.getElementById("countdown");
+      var greeting = document.getElementById("greeting");
+      var fields = [
+        ["days", "день", "дня", "дней"],
+        ["hours", "час", "часа", "часов"],
+        ["minutes", "минута", "минуты", "минут"],
+        ["seconds", "секунда", "секунды", "секунд"]
+      ];
+      var nodes = fields.map(function (field) {
+        return {
+          num: document.getElementById(field[0]),
+          label: document.getElementById(field[0] + "-label"),
+          forms: [field[1], field[2], field[3]]
+        };
+      });
+
+      function render(parts) {
+        var keys = ["days", "hours", "minutes", "seconds"];
+        for (var i = 0; i < nodes.length; i++) {
+          var value = parts[keys[i]];
+          nodes[i].num.textContent = pad(value);
+          nodes[i].label.textContent = plural(value, nodes[i].forms[0], nodes[i].forms[1], nodes[i].forms[2]);
+        }
+      }
+
+      function showGreeting() {
+        countdown.hidden = true;
+        greeting.hidden = false;
+      }
+
+      function tick() {
+        if (typeof TARGET_MS !== "number" || TARGET_MS !== TARGET_MS) {
+          showGreeting();
+          return;
+        }
+        var parts = remainingParts(Date.now(), TARGET_MS);
+        if (!parts) {
+          showGreeting();
+          return;
+        }
+        render(parts);
+        countdown.hidden = false;
+        greeting.hidden = true;
+        var delay = 1000 - (Date.now() % 1000);
+        window.setTimeout(tick, delay);
+      }
+
+      tick();
+    })();
+  </script>
 </body>
 </html>
