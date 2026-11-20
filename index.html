@@ -46,6 +46,7 @@
       text-wrap: balance;
     }
 
+    #countdown-galya,
     #countdown {
       width: 100%;
     }
@@ -117,6 +118,27 @@
 <body>
   <main>
     <h1>Скоро здесь будет сюрприз&nbsp;🎈</h1>
+    <div id="countdown-galya" hidden>
+      <p class="lead">До дня рождения Гали осталось:</p>
+      <ul class="units">
+        <li class="unit">
+          <span class="num">00</span>
+          <span class="label">дней</span>
+        </li>
+        <li class="unit">
+          <span class="num">00</span>
+          <span class="label">часов</span>
+        </li>
+        <li class="unit">
+          <span class="num">00</span>
+          <span class="label">минут</span>
+        </li>
+        <li class="unit">
+          <span class="num">00</span>
+          <span class="label">секунд</span>
+        </li>
+      </ul>
+    </div>
     <div id="countdown" hidden>
       <p class="lead">До дня рождения Ульяны осталось:</p>
       <ul class="units">
@@ -143,7 +165,8 @@
   <script>
     (function () {
       // Fixed +03:00 so Moscow midnight is the same instant in every timezone.
-      var TARGET_MS = Date.parse("2026-11-22T00:00:00+03:00");
+      var GALYA_TARGET_MS = Date.parse("2026-11-21T00:00:00+03:00");
+      var ULYANA_TARGET_MS = Date.parse("2026-11-22T00:00:00+03:00");
 
       function plural(n, one, few, many) {
         var abs = Math.abs(Math.trunc(n)) % 100;
@@ -169,24 +192,28 @@
         return String(n).padStart(2, "0");
       }
 
-      var countdown = document.getElementById("countdown");
-      var greeting = document.getElementById("greeting");
       var fields = [
         ["days", "день", "дня", "дней"],
         ["hours", "час", "часа", "часов"],
         ["minutes", "минута", "минуты", "минут"],
         ["seconds", "секунда", "секунды", "секунд"]
       ];
-      var nodes = fields.map(function (field) {
-        return {
-          num: document.getElementById(field[0]),
-          label: document.getElementById(field[0] + "-label"),
-          forms: [field[1], field[2], field[3]]
-        };
-      });
+      var keys = ["days", "hours", "minutes", "seconds"];
 
-      function render(parts) {
-        var keys = ["days", "hours", "minutes", "seconds"];
+      function bind(root) {
+        var units = root.querySelectorAll(".unit");
+        var nodes = [];
+        for (var i = 0; i < units.length; i++) {
+          nodes.push({
+            num: units[i].querySelector(".num"),
+            label: units[i].querySelector(".label"),
+            forms: [fields[i][1], fields[i][2], fields[i][3]]
+          });
+        }
+        return nodes;
+      }
+
+      function render(nodes, parts) {
         for (var i = 0; i < nodes.length; i++) {
           var value = parts[keys[i]];
           nodes[i].num.textContent = pad(value);
@@ -194,26 +221,36 @@
         }
       }
 
-      function showGreeting() {
-        countdown.hidden = true;
-        greeting.hidden = false;
+      // greeting is only passed for Ulyana. Galya has none: once her target
+      // is reached the block is hidden and stays hidden.
+      function apply(root, targetMs, greeting, nodes, nowMs) {
+        var invalid = typeof targetMs !== "number" || targetMs !== targetMs;
+        var parts = invalid ? null : remainingParts(nowMs, targetMs);
+        if (!parts) {
+          root.hidden = true;
+          if (greeting) greeting.hidden = false;
+          return false;
+        }
+        render(nodes, parts);
+        root.hidden = false;
+        if (greeting) greeting.hidden = true;
+        return true;
       }
 
+      var galya = document.getElementById("countdown-galya");
+      var countdown = document.getElementById("countdown");
+      var greeting = document.getElementById("greeting");
+      var galyaNodes = bind(galya);
+      var ulyanaNodes = bind(countdown);
+
       function tick() {
-        if (typeof TARGET_MS !== "number" || TARGET_MS !== TARGET_MS) {
-          showGreeting();
-          return;
+        var now = Date.now();
+        var galyaLive = apply(galya, GALYA_TARGET_MS, null, galyaNodes, now);
+        var ulyanaLive = apply(countdown, ULYANA_TARGET_MS, greeting, ulyanaNodes, now);
+        if (galyaLive || ulyanaLive) {
+          var delay = 1000 - (Date.now() % 1000);
+          window.setTimeout(tick, delay);
         }
-        var parts = remainingParts(Date.now(), TARGET_MS);
-        if (!parts) {
-          showGreeting();
-          return;
-        }
-        render(parts);
-        countdown.hidden = false;
-        greeting.hidden = true;
-        var delay = 1000 - (Date.now() % 1000);
-        window.setTimeout(tick, delay);
       }
 
       tick();
