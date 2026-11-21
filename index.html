@@ -244,34 +244,58 @@
       overflow: visible;
     }
 
-    .app.is-open .day.heart { opacity: 0.92; }
-    .app.is-open .day.bloom { opacity: 0.95; }
-    .app.is-open .day.sprig { opacity: 0.9; }
+    .app.is-open .day.heart { opacity: 0.95; }
+    .app.is-open .day.bloom { opacity: 1; }
+    .app.is-open .day.sprig { opacity: 0.95; }
     .app.is-open .day.spark { opacity: 1; }
+    .app.is-open .day.heart path { stroke: #a1123c; stroke-width: 1.8; }
+    .app.is-open .day.heart path[fill="#fde8ec"],
+    .app.is-open .day.heart path[fill="#f8d0d4"],
+    .app.is-open .day.heart path[fill="#f3b7c0"] { fill: #f7a8bc; }
+    .app.is-open .day.bloom ellipse { stroke: #9e1238; fill: #f48aa6; }
+    .app.is-open .day.bloom circle { fill: #d4a017; }
+    .app.is-open .day.sprig path { stroke: #9e1238; }
+    .app.is-open .day.sprig ellipse { fill: #f48aa6; stroke: #a1123c; }
+    .app.is-open .day.spark path { fill: #d4a017; }
 
     .app.is-open .day.float { animation: drift 12s ease-in-out infinite; }
     .app.is-open .day.spark { animation: shimmer 2.8s ease-in-out infinite; }
 
-    .dh1 { top: 2%; left: 4%; width: 28px; height: 26px; animation-delay: -1s; }
-    .dh2 { top: 4%; right: 5%; width: 22px; height: 20px; animation-delay: -4s; }
-    .dh3 { top: 46%; left: 1%; width: 24px; height: 22px; animation-delay: -2s; }
-    .dh4 { bottom: 18%; right: 2%; width: 22px; height: 20px; animation-delay: -6s; }
-    .dh5 { bottom: 4%; left: 8%; width: 30px; height: 28px; animation-delay: -3s; }
-    .dh6 { bottom: 3%; right: 7%; width: 24px; height: 22px; animation-delay: -5s; }
-    .db1 { top: 17%; right: -2px; width: 48px; height: 48px; animation-delay: -2.5s; }
-    .db2 { top: 66%; left: -4px; width: 44px; height: 44px; animation-delay: -7s; }
-    .db3 { bottom: 8%; right: 1%; width: 40px; height: 40px; animation-delay: -1.5s; }
-    .db4 { top: 34%; left: -2px; width: 34px; height: 34px; animation-delay: -4.5s; }
-    .ds1 { top: 11%; left: 18%; width: 16px; height: 16px; animation-delay: 0s; }
-    .ds2 { top: 9%; right: 20%; width: 13px; height: 13px; animation-delay: -1.1s; }
-    .ds3 { top: 37%; right: 12%; width: 12px; height: 12px; animation-delay: -0.4s; }
-    .ds4 { top: 52%; left: 10%; width: 14px; height: 14px; animation-delay: -1.8s; }
-    .ds5 { bottom: 18%; left: 22%; width: 13px; height: 13px; animation-delay: -0.7s; }
-    .ds6 { bottom: 9%; right: 20%; width: 15px; height: 15px; animation-delay: -2.1s; }
-    .sg1 { top: -12px; left: -16px; width: 78px; height: 92px; }
-    .sg2 { top: -10px; right: -14px; width: 74px; height: 86px; animation-delay: -3s; }
-    .sg3 { bottom: 0; left: 0; width: 100px; height: 116px; animation-delay: -5s; }
-    .sg4 { bottom: 0; right: 0; width: 96px; height: 110px; animation-delay: -8s; }
+    .dh1 { top: 2%; left: 3%; width: 42px; height: 38px; animation-delay: -1s; }
+    .dh2 { top: 3%; right: 4%; width: 34px; height: 30px; animation-delay: -4s; }
+    .dh3 { top: 44%; left: 0; width: 36px; height: 32px; animation-delay: -2s; }
+    .dh4 { bottom: 16%; right: 1%; width: 34px; height: 30px; animation-delay: -6s; }
+    .dh5 { bottom: 3%; left: 6%; width: 44px; height: 40px; animation-delay: -3s; }
+    .dh6 { bottom: 2%; right: 6%; width: 36px; height: 32px; animation-delay: -5s; }
+    .db1 { top: 16%; right: -4px; width: 72px; height: 72px; animation-delay: -2.5s; }
+    .db2 { top: 64%; left: -6px; width: 66px; height: 66px; animation-delay: -7s; }
+    .db3 { bottom: 7%; right: 0; width: 60px; height: 60px; animation-delay: -1.5s; }
+    .db4 { top: 32%; left: -4px; width: 52px; height: 52px; animation-delay: -4.5s; }
+    .ds1 { top: 11%; left: 16%; width: 22px; height: 22px; animation-delay: 0s; }
+    .ds2 { top: 8%; right: 18%; width: 18px; height: 18px; animation-delay: -1.1s; }
+    .ds3 { top: 36%; right: 10%; width: 18px; height: 18px; animation-delay: -0.4s; }
+    .ds4 { top: 50%; left: 8%; width: 20px; height: 20px; animation-delay: -1.8s; }
+    .ds5 { bottom: 17%; left: 18%; width: 18px; height: 18px; animation-delay: -0.7s; }
+    .ds6 { bottom: 8%; right: 18%; width: 22px; height: 22px; animation-delay: -2.1s; }
+    .sg1 { top: -18px; left: -22px; width: 118px; height: 138px; }
+    .sg2 { top: -16px; right: -20px; width: 112px; height: 130px; animation-delay: -3s; }
+    .sg3 { bottom: -8px; left: -18px; width: 148px; height: 170px; animation-delay: -5s; }
+    .sg4 { bottom: -6px; right: -16px; width: 142px; height: 164px; animation-delay: -8s; }
+    .wide { display: none; }
+
+    @media (min-width: 1100px) {
+      .app.is-open .wide { display: block; }
+      .wl1 { top: 8%; left: 5%; width: 78px; height: 78px; }
+      .wl2 { top: 30%; left: 7%; width: 54px; height: 50px; }
+      .wl3 { top: 52%; left: 4%; width: 70px; height: 70px; }
+      .wl4 { top: 74%; left: 8%; width: 46px; height: 42px; }
+      .wl5 { top: 18%; left: 14%; width: 22px; height: 22px; }
+      .wr1 { top: 10%; right: 6%; width: 74px; height: 74px; }
+      .wr2 { top: 34%; right: 8%; width: 50px; height: 46px; }
+      .wr3 { top: 56%; right: 5%; width: 68px; height: 68px; }
+      .wr4 { top: 78%; right: 9%; width: 42px; height: 38px; }
+      .wr5 { top: 22%; right: 15%; width: 20px; height: 20px; }
+    }
 
     .h1 { top: 3.5%; left: 3%; width: 34px; height: 30px; animation: drift 9s ease-in-out infinite; }
     .h2 { top: 5%; right: 4%; width: 26px; height: 24px; animation: drift 11s ease-in-out -2s infinite; }
@@ -372,10 +396,16 @@
 
     .app.is-open .doorway {
       width: min(72vw, 250px);
-      box-shadow:
-        0 0 0 1px rgba(36, 28, 22, 0.16),
-        0 16px 28px rgba(80, 50, 20, 0.16);
+      background: #2a345c;
+      clip-path: inset(-40% 0 0 -170%);
+      box-shadow: 0 16px 34px rgba(72, 40, 62, 0.18);
     }
+
+    .app.is-open .front {
+      background: linear-gradient(180deg, #3c4874 0%, #2a345c 100%);
+    }
+
+    .app.is-open .back { background: #243052; }
 
     .app.is-ringing .doorway { animation: knock 0.52s ease-in-out 3; }
 
@@ -388,6 +418,7 @@
 
     .app.is-open .open-copy {
       gap: 0.15rem;
+      margin-top: 0;
       animation: appear 0.9s ease 0.12s both;
     }
 
@@ -437,11 +468,16 @@
     }
 
     .voice .icon {
-      width: 1.6rem;
+      width: 1.85rem;
+      height: 1.85rem;
       flex: 0 0 auto;
-      font-size: 1.25rem;
-      line-height: 1;
+      display: block;
     }
+
+    .voice .mark { display: block; width: 100%; height: 100%; }
+    .voice .mark.pause { display: none; }
+    .voice[aria-pressed="true"] .mark.play { display: none; }
+    .voice[aria-pressed="true"] .mark.pause { display: block; }
 
     .voice .name { line-height: 1.1; }
 
@@ -517,6 +553,7 @@
       .title { font-size: 4.6rem; }
       .doorway { width: 220px; }
       .app.is-open .doorway { width: 210px; }
+      .app.is-open .open-copy { margin-top: 1.6rem; }
       .mast,
       .closed-copy,
       .open-copy { width: min(100%, 26rem); }
@@ -654,6 +691,16 @@
       <svg class="day spark ds4" viewBox="0 0 16 16"><path d="M8 0 L9.1 6.4 L16 8 L9.1 9.6 L8 16 L6.9 9.6 L0 8 L6.9 6.4 Z" fill="#e2b15a"/></svg>
       <svg class="day spark ds5" viewBox="0 0 16 16"><path d="M8 0 L9.1 6.4 L16 8 L9.1 9.6 L8 16 L6.9 9.6 L0 8 L6.9 6.4 Z" fill="#e8c36a"/></svg>
       <svg class="day spark ds6" viewBox="0 0 16 16"><path d="M8 0 L9.1 6.4 L16 8 L9.1 9.6 L8 16 L6.9 9.6 L0 8 L6.9 6.4 Z" fill="#d4a24a"/></svg>
+      <svg class="day bloom wide wl1" viewBox="0 0 64 64"><g fill="#f48aa6" stroke="#9e1238" stroke-width="1.3"><ellipse cx="32" cy="13" rx="7" ry="11"/><ellipse cx="32" cy="13" rx="7" ry="11" transform="rotate(72 32 32)"/><ellipse cx="32" cy="13" rx="7" ry="11" transform="rotate(144 32 32)"/><ellipse cx="32" cy="13" rx="7" ry="11" transform="rotate(216 32 32)"/><ellipse cx="32" cy="13" rx="7" ry="11" transform="rotate(288 32 32)"/></g><circle cx="32" cy="32" r="3.2" fill="#d4a017"/></svg>
+      <svg class="day heart wide wl2" viewBox="0 0 40 36"><path d="M20 32 C8 22 3 14 10 8 C14 4 18 8 20 12 C22 8 26 4 30 8 C37 14 32 22 20 32 Z" fill="none" stroke="#a1123c" stroke-width="1.7"/></svg>
+      <svg class="day bloom wide wl3" viewBox="0 0 64 64"><g fill="#f7a8bc" stroke="#9e1238" stroke-width="1.25"><ellipse cx="32" cy="13" rx="7" ry="11"/><ellipse cx="32" cy="13" rx="7" ry="11" transform="rotate(72 32 32)"/><ellipse cx="32" cy="13" rx="7" ry="11" transform="rotate(144 32 32)"/><ellipse cx="32" cy="13" rx="7" ry="11" transform="rotate(216 32 32)"/><ellipse cx="32" cy="13" rx="7" ry="11" transform="rotate(288 32 32)"/></g><circle cx="32" cy="32" r="3" fill="#e0b44a"/></svg>
+      <svg class="day heart wide wl4" viewBox="0 0 40 36"><path d="M20 32 C8 22 3 14 10 8 C14 4 18 8 20 12 C22 8 26 4 30 8 C37 14 32 22 20 32 Z" fill="#f7a8bc" stroke="#9e1238" stroke-width="1.5"/></svg>
+      <svg class="day spark wide wl5" viewBox="0 0 16 16"><path d="M8 0 L9.1 6.4 L16 8 L9.1 9.6 L8 16 L6.9 9.6 L0 8 L6.9 6.4 Z" fill="#d4a017"/></svg>
+      <svg class="day bloom wide wr1" viewBox="0 0 64 64"><g fill="#f48aa6" stroke="#9e1238" stroke-width="1.3"><ellipse cx="32" cy="13" rx="7" ry="11"/><ellipse cx="32" cy="13" rx="7" ry="11" transform="rotate(72 32 32)"/><ellipse cx="32" cy="13" rx="7" ry="11" transform="rotate(144 32 32)"/><ellipse cx="32" cy="13" rx="7" ry="11" transform="rotate(216 32 32)"/><ellipse cx="32" cy="13" rx="7" ry="11" transform="rotate(288 32 32)"/></g><circle cx="32" cy="32" r="3.2" fill="#d4a017"/></svg>
+      <svg class="day heart wide wr2" viewBox="0 0 40 36"><path d="M20 32 C8 22 3 14 10 8 C14 4 18 8 20 12 C22 8 26 4 30 8 C37 14 32 22 20 32 Z" fill="#f7a8bc" stroke="#a1123c" stroke-width="1.5"/></svg>
+      <svg class="day bloom wide wr3" viewBox="0 0 64 64"><g fill="#f7a8bc" stroke="#9e1238" stroke-width="1.25"><ellipse cx="32" cy="13" rx="7" ry="11"/><ellipse cx="32" cy="13" rx="7" ry="11" transform="rotate(72 32 32)"/><ellipse cx="32" cy="13" rx="7" ry="11" transform="rotate(144 32 32)"/><ellipse cx="32" cy="13" rx="7" ry="11" transform="rotate(216 32 32)"/><ellipse cx="32" cy="13" rx="7" ry="11" transform="rotate(288 32 32)"/></g><circle cx="32" cy="32" r="3" fill="#e0b44a"/></svg>
+      <svg class="day heart wide wr4" viewBox="0 0 40 36"><path d="M20 32 C8 22 3 14 10 8 C14 4 18 8 20 12 C22 8 26 4 30 8 C37 14 32 22 20 32 Z" fill="none" stroke="#9e1238" stroke-width="1.7"/></svg>
+      <svg class="day spark wide wr5" viewBox="0 0 16 16"><path d="M8 0 L9.1 6.4 L16 8 L9.1 9.6 L8 16 L6.9 9.6 L0 8 L6.9 6.4 Z" fill="#d4a017"/></svg>
     </div>
     <header class="mast">
       <h1 class="title" id="closed-title">Ульяна, 19</h1>
@@ -691,13 +738,13 @@
       <p class="hint" id="listen-hint">Нажми, чтобы послушать</p>
       <div class="voices" id="voices">
         <button type="button" class="voice" data-file="mama" aria-pressed="false">
-          <span class="icon" aria-hidden="true">▶️</span><span class="name">Мама</span>
+          <span class="icon" aria-hidden="true"><svg class="mark play" viewBox="0 0 32 32"><circle cx="16" cy="16" r="13.2" fill="#fff6f2" stroke="#b76a52" stroke-width="1.6"/><path d="M13 10.2 L22.2 16 L13 21.8 Z" fill="#c4846a"/></svg><svg class="mark pause" viewBox="0 0 32 32"><circle cx="16" cy="16" r="13.2" fill="#fff6f2" stroke="#b76a52" stroke-width="1.6"/><rect x="11" y="10" width="3.3" height="12" rx="1" fill="#c4846a"/><rect x="17.7" y="10" width="3.3" height="12" rx="1" fill="#c4846a"/></svg></span><span class="name">Мама</span>
         </button>
         <button type="button" class="voice" data-file="taya" aria-pressed="false">
-          <span class="icon" aria-hidden="true">▶️</span><span class="name">Тая</span>
+          <span class="icon" aria-hidden="true"><svg class="mark play" viewBox="0 0 32 32"><circle cx="16" cy="16" r="13.2" fill="#fff6f2" stroke="#b76a52" stroke-width="1.6"/><path d="M13 10.2 L22.2 16 L13 21.8 Z" fill="#c4846a"/></svg><svg class="mark pause" viewBox="0 0 32 32"><circle cx="16" cy="16" r="13.2" fill="#fff6f2" stroke="#b76a52" stroke-width="1.6"/><rect x="11" y="10" width="3.3" height="12" rx="1" fill="#c4846a"/><rect x="17.7" y="10" width="3.3" height="12" rx="1" fill="#c4846a"/></svg></span><span class="name">Тая</span>
         </button>
         <button type="button" class="voice" data-file="papa" aria-pressed="false">
-          <span class="icon" aria-hidden="true">▶️</span><span class="name">Папа</span>
+          <span class="icon" aria-hidden="true"><svg class="mark play" viewBox="0 0 32 32"><circle cx="16" cy="16" r="13.2" fill="#fff6f2" stroke="#b76a52" stroke-width="1.6"/><path d="M13 10.2 L22.2 16 L13 21.8 Z" fill="#c4846a"/></svg><svg class="mark pause" viewBox="0 0 32 32"><circle cx="16" cy="16" r="13.2" fill="#fff6f2" stroke="#b76a52" stroke-width="1.6"/><rect x="11" y="10" width="3.3" height="12" rx="1" fill="#c4846a"/><rect x="17.7" y="10" width="3.3" height="12" rx="1" fill="#c4846a"/></svg></span><span class="name">Папа</span>
         </button>
       </div>
     </section>
@@ -721,8 +768,6 @@
       "use strict";
 
       var EIGHTH = 0.28;
-      var ICON_PLAY = "▶️";
-      var ICON_PAUSE = "⏸️";
 
       // Happy Birthday to You, public-domain melody in C major, one octave up.
       // sol sol la sol do ti | sol sol la sol re do | sol sol sol mi do ti la | fa fa mi do re do
@@ -1020,8 +1065,6 @@
       }
 
       function setIcon(button, playing) {
-        var icon = button.querySelector(".icon");
-        icon.textContent = playing ? ICON_PAUSE : ICON_PLAY;
         button.setAttribute("aria-pressed", playing ? "true" : "false");
       }
 

@@ -217,7 +217,7 @@ try {
       disabled: openBtn.disabled,
       openText: openBtn.textContent.trim(),
       names: [...document.querySelectorAll(".voice .name")].map((n) => n.textContent),
-      icons: [...document.querySelectorAll(".voice .icon")].map((n) => n.textContent),
+      icons: [...document.querySelectorAll(".voice")].map((b) => getComputedStyle(b.querySelector(".mark.pause")).display === "none" ? "play" : "pause"),
       greetingHidden: style.display === "none",
       melody: document.getElementById("app").dataset.melody,
       bell: document.getElementById("app").dataset.bell,
@@ -236,7 +236,7 @@ try {
   assert.equal(before.disabled, false, "open button is available immediately");
   assert.equal(before.openText, "Открыть дверь");
   assert.deepEqual(before.names, ["Мама", "Тая", "Папа"]);
-  assert.deepEqual(before.icons, ["▶️", "▶️", "▶️"]);
+  assert.deepEqual(before.icons, ["play", "play", "play"]);
   assert.equal(before.greetingHidden, true);
   assert.equal(before.melody, "idle");
   assert.equal(before.closed, true);
@@ -316,9 +316,9 @@ try {
   assert.notEqual(mama.bell, "playing");
   assert.equal(mama.overlap, "0");
   assert.equal(mama.context, "suspended");
-  assert.equal(mama.icons[0], "⏸️");
-  assert.equal(mama.icons[1], "▶️");
-  assert.equal(mama.icons[2], "▶️");
+  assert.equal(mama.icons[0], "pause");
+  assert.equal(mama.icons[1], "play");
+  assert.equal(mama.icons[2], "play");
   assert.equal(mama.paused[0], false);
   assert.equal(mama.paused[1], true);
   assert.equal(mama.paused[2], true);
@@ -338,7 +338,7 @@ try {
   await click('.voice[data-file="mama"]');
   assert.equal(await waitFor(`document.getElementById("mama").paused === true && document.getElementById("app").dataset.melody === "playing"`), true, "pause did not bring the melody back");
   const paused = await voiceState();
-  assert.equal(paused.icons[0], "▶️");
+  assert.equal(paused.icons[0], "play");
   assert.equal(paused.paused[0], true);
   assert.ok(paused.times[0] > 0, "pause keeps the place");
   assert.equal(paused.melody, "playing");
@@ -350,7 +350,7 @@ try {
   assert.equal(await waitFor(`!document.getElementById("mama").paused && document.getElementById("app").dataset.activeVoice === "mama"`), true, "resume did not play");
   await new Promise((r) => setTimeout(r, 200));
   const resumed = await voiceState();
-  assert.equal(resumed.icons[0], "⏸️");
+  assert.equal(resumed.icons[0], "pause");
   assert.equal(resumed.paused[0], false);
   assert.ok(resumed.times[0] + 0.05 >= pausedAt, "resume restarted instead of continuing");
   assert.equal(resumed.melody, "stopped");
@@ -362,9 +362,9 @@ try {
   assert.equal(taya.paused[0], true);
   assert.equal(taya.times[0], 0, "previous voice is stopped");
   assert.equal(taya.paused[1], false);
-  assert.equal(taya.icons[0], "▶️");
-  assert.equal(taya.icons[1], "⏸️");
-  assert.equal(taya.icons[2], "▶️");
+  assert.equal(taya.icons[0], "play");
+  assert.equal(taya.icons[1], "pause");
+  assert.equal(taya.icons[2], "play");
   assert.match(taya.sources[1], /\/taya\.(m4a|mp3)$/);
   assert.equal(taya.melody, "stopped");
   assert.notEqual(taya.bell, "playing");
@@ -376,7 +376,7 @@ try {
   assert.equal(papa.paused[1], true);
   assert.equal(papa.times[1], 0);
   assert.equal(papa.paused[2], false);
-  assert.deepEqual(papa.icons, ["▶️", "▶️", "⏸️"]);
+  assert.deepEqual(papa.icons, ["play", "play", "pause"]);
   assert.match(papa.sources[2], /\/papa\.(m4a|mp3)$/);
   assert.equal(papa.paused[0], true);
   assert.equal(papa.melody, "stopped");
@@ -388,7 +388,7 @@ try {
   await evaluate(`document.getElementById("papa").dispatchEvent(new Event("ended"))`);
   assert.equal(await waitFor(`document.getElementById("app").dataset.melody === "playing"`), true, "melody did not return when the voice ended");
   const ended = await voiceState();
-  assert.equal(ended.icons[2], "▶️");
+  assert.equal(ended.icons[2], "play");
   assert.equal(ended.active, "");
   assert.equal(ended.melody, "playing");
   assert.equal(ended.paused[2], true);
@@ -524,7 +524,7 @@ async function voiceState() {
       return {
         melody: app.dataset.melody,
         active: app.dataset.activeVoice,
-        icons: [...document.querySelectorAll(".voice .icon")].map((n) => n.textContent),
+        icons: [...document.querySelectorAll(".voice")].map((b) => getComputedStyle(b.querySelector(".mark.pause")).display === "none" ? "play" : "pause"),
         paused: audios.map((a) => a.paused),
         times: audios.map((a) => a.currentTime),
         sources: audios.map((a) => a.currentSrc || a.src),

@@ -156,8 +156,11 @@ assert.equal(script.includes("ctx.close("), false);
 assert.match(script, /addEventListener\("ended"[\s\S]*beginMelody\(\)/);
 assert.ok(body.indexOf("beginMelody()") !== -1 && body.indexOf("beginMelody()") < body.indexOf("audio.play()"));
 assert.match(script, /canPlayType/);
-assert.match(script, /ICON_PAUSE = "⏸️"/);
-assert.match(script, /ICON_PLAY = "▶️"/);
+assert.match(html, /class="mark play"/);
+assert.match(html, /class="mark pause"/);
+assert.match(script, /setAttribute\("aria-pressed"/);
+assert.equal(html.includes("▶️"), false);
+assert.equal(html.includes("⏸️"), false);
 assert.match(script, /addEventListener\("ended"/);
 
 console.log("scene ok");
