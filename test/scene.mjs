@@ -7,34 +7,66 @@ const html = fs.readFileSync(new URL("index.html", root), "utf8");
 assert.match(html, /<html lang="ru">/);
 assert.match(html, /<meta name="viewport" content="width=device-width, initial-scale=1">/);
 assert.match(html, /<meta name="robots" content="noindex">/);
+assert.match(html, /<link rel="icon" href="favicon\.ico">/);
+assert.match(html, /<title>Ульяна, это мы<\/title>/);
 assert.equal(/https?:\/\//.test(html), false, "page must not request external resources");
 assert.equal(/<script[^>]+src=/.test(html), false);
-assert.equal(/<link[^>]+href=/.test(html), false);
+assert.equal(/<link(?![^>]*href="favicon\.ico")[^>]*href=/.test(html), false);
 assert.equal(/url\(\s*['"]?\/\//.test(html), false);
 assert.equal(/\bfetch\s*\(/.test(html), false);
 assert.equal(fs.readFileSync(new URL("CNAME", root), "utf8").trim(), "ulyanamarchenko.ru");
 assert.equal(fs.readFileSync(new URL(".nojekyll", root), "utf8"), "");
+assert.ok(fs.statSync(new URL("favicon.ico", root)).size > 0);
 
-assert.match(html, /Коснись экрана 🎈/);
-assert.match(html, /Нажми на дверь/);
-assert.match(html, /Ульяна, с днём рождения! 🎉/);
+assert.match(html, /Ульяна, 19/);
+assert.match(html, /22 ноября/);
+assert.match(html, /В дверь звонят/);
+assert.match(html, /Открыть дверь/);
+assert.match(html, /С днём рождения,/);
+assert.match(html, /Ульяна!/);
+assert.match(html, /Нажми, чтобы послушать/);
+assert.equal(html.includes("Позвонить"), false);
+assert.equal(html.includes("Коснись"), false);
 assert.equal(html.includes("Гал"), false);
 assert.equal(/марченко/i.test(html), false);
+assert.equal(/🔊|🔇|confetti|balloon|dancer/.test(html), false);
+assert.match(html, /srcset="img\/family\.webp"/);
+assert.match(html, /src="img\/family\.jpg"/);
+assert.match(html, /class="family"/);
+assert.equal(html.includes("fig-mum"), false);
+const jpgSize = fs.statSync(new URL("img/family.jpg", root)).size;
+const webpSize = fs.statSync(new URL("img/family.webp", root)).size;
+assert.ok(jpgSize > 1000 && jpgSize < 250 * 1024, "jpg size " + jpgSize);
+assert.ok(webpSize > 1000 && webpSize < 250 * 1024, "webp size " + webpSize);
+assert.equal(/<audio[^>]*autoplay/.test(html), false);
+
+const names = [...html.matchAll(/<span class="name">([^<]+)<\/span>/g)].map((m) => m[1]);
+assert.deepEqual(names, ["Мама", "Тая", "Папа"]);
+
+const voices = [...html.matchAll(/data-file="(mama|taya|papa)"[\s\S]*?<span class="name">([^<]+)<\/span>/g)];
+assert.deepEqual(voices.map((m) => [m[2], m[1]]), [["Мама", "mama"], ["Тая", "taya"], ["Папа", "papa"]]);
+
+for (const name of ["mama", "taya", "papa"]) {
+  const block = html.match(new RegExp(`<audio id="${name}"[\\s\\S]*?<\\/audio>`));
+  assert.ok(block, "audio " + name);
+  const sources = [...block[0].matchAll(/src="([^"]+)"/g)].map((m) => m[1]);
+  assert.deepEqual(sources, [`audio/${name}.m4a`, `audio/${name}.mp3`]);
+  assert.match(block[0], /type="audio\/mp4"/);
+  assert.match(block[0], /type="audio\/mpeg"/);
+  assert.equal(block[0].includes(".ogg"), false);
+  const m4a = fs.readFileSync(new URL(`audio/${name}.m4a`, root));
+  const mp3 = fs.readFileSync(new URL(`audio/${name}.mp3`, root));
+  const ogg = fs.readFileSync(new URL(`audio/${name}.ogg`, root));
+  assert.ok(m4a.includes(Buffer.from("ftyp")), "m4a container");
+  assert.ok(m4a.includes(Buffer.from("mp4a")), "aac sample entry");
+  assert.ok(mp3.subarray(0, 3).equals(Buffer.from("ID3")) || mp3[0] === 0xff, "mp3");
+  assert.ok(ogg.length > 0, "ogg copy");
+}
 
 assert.match(html, /rotateY\(-108deg\)/);
 assert.match(html, /prefers-reduced-motion:\s*reduce/);
-assert.match(html, /var RING_COUNT = 3;/);
-assert.match(html, /var RING_GAP = 1\.5;/);
-assert.match(html, /var SILENCE = 1\.0;/);
-assert.match(html, /playDingDong\(startAt \+ r \* RING_GAP\)/);
-assert.match(html, /freq\("A5"\)/);
-assert.match(html, /freq\("E5"\)/);
-
-const rings = html.match(/class="tail-ring"/g) || [];
-assert.ok(rings.length >= 5, "cat tail needs clear darker rings");
-assert.match(html, /class="dancer dancer-cat cat"/);
-assert.match(html, /#f7f1e6/);
-assert.match(html, /#6a3418/);
+assert.match(html, /id="open-door"/);
+assert.equal(/id="open-door"[^>]*disabled/.test(html), false);
 
 const script = html.match(/<script>([\s\S]*?)<\/script>/)[1];
 const melodyBlock = script.match(/var MELODY = \[([\s\S]*?)\];/);
@@ -90,5 +122,45 @@ assert.match(semiMap, /A4:\s*0/);
 assert.match(semiMap, /G5:\s*10/);
 assert.match(semiMap, /C6:\s*15/);
 assert.match(semiMap, /B5:\s*14/);
+
+assert.equal(script.includes("LOOPS"), false);
+assert.match(script, /function playDingDong\(/);
+assert.match(script, /var BELL_RINGS = 3;/);
+assert.match(script, /freq\("A5"\)/);
+assert.match(script, /freq\("E5"\)/);
+assert.match(script, /function stopBell\(\)/);
+assert.match(script, /function startBell\(\)/);
+assert.match(script, /closest\("#open-door"\)/);
+assert.match(script, /pointerdown/);
+const beginMelody = script.match(/function beginMelody\(\) \{([\s\S]*?)\n      \}/);
+assert.ok(beginMelody, "beginMelody");
+assert.match(beginMelody[1], /stopBell\(\)/);
+assert.equal(/for\s*\(/.test(beginMelody[1]), false, "melody is not looped");
+assert.equal((beginMelody[1].match(/scheduleSong\(/g) || []).length, 1, "melody plays once");
+const openDoor = script.match(/function openDoor\(\) \{([\s\S]*?)\n      \}/);
+assert.ok(openDoor, "openDoor");
+assert.ok(openDoor[1].indexOf("stopBell()") !== -1 && openDoor[1].indexOf("stopBell()") < openDoor[1].indexOf("beginMelody"));
+
+const onVoice = script.match(/function onVoice\(button\) \{([\s\S]*?)\n      \}/);
+assert.ok(onVoice, "onVoice");
+const body = onVoice[1];
+assert.ok(body.indexOf("stopBell()") !== -1 && body.indexOf("stopBell()") < body.indexOf("audio.play()"));
+assert.ok(body.indexOf("stopMelody()") !== -1 && body.indexOf("stopMelody()") < body.indexOf("audio.play()"));
+assert.ok(body.indexOf("stopOthers(audio)") < body.indexOf("audio.play()"));
+assert.match(body, /shouldPause/);
+assert.match(body, /audio\.pause\(\)/);
+assert.match(script, /function stopMelody\(\)/);
+assert.match(script, /melodyCancelled = true/);
+assert.match(script, /ctx\.suspend\(\)/);
+assert.equal(script.includes("ctx.close("), false);
+assert.match(script, /addEventListener\("ended"[\s\S]*beginMelody\(\)/);
+assert.ok(body.indexOf("beginMelody()") !== -1 && body.indexOf("beginMelody()") < body.indexOf("audio.play()"));
+assert.match(script, /canPlayType/);
+assert.match(html, /class="mark play"/);
+assert.match(html, /class="mark pause"/);
+assert.match(script, /setAttribute\("aria-pressed"/);
+assert.equal(html.includes("▶️"), false);
+assert.equal(html.includes("⏸️"), false);
+assert.match(script, /addEventListener\("ended"/);
 
 console.log("scene ok");
