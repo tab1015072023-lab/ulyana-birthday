@@ -398,6 +398,33 @@ try {
   await new Promise((r) => setTimeout(r, 200));
   await shoot("opened_desktop.png");
 
+  for (const size of [[412, 800, "opened_412x800"], [390, 750, "opened_390x750"], [360, 690, "opened_360x690"]]) {
+    await setViewport(size[0], size[1], true);
+    await new Promise((r) => setTimeout(r, 200));
+    const fit = await evaluate(`(() => {
+      const buttons = [...document.querySelectorAll(".voice")];
+      const greeting = document.getElementById("greeting").getBoundingClientRect();
+      const door = document.getElementById("doorway").getBoundingClientRect();
+      return {
+        vh: window.innerHeight,
+        buttons: buttons.map((b) => {
+          const r = b.getBoundingClientRect();
+          return { top: r.top, bottom: r.bottom, height: r.height };
+        }),
+        greetingTop: greeting.top,
+        doorTop: door.top,
+        doorBottom: door.bottom
+      };
+    })()`);
+    for (const button of fit.buttons) {
+      assert.ok(button.top >= 0 && button.bottom <= fit.vh + 0.5, size[2] + " button clipped " + JSON.stringify(button) + " vh=" + fit.vh);
+      assert.ok(button.height >= 47 && button.height <= 53, size[2] + " button height " + button.height);
+    }
+    assert.ok(fit.doorTop >= 0, size[2] + " door clipped at top " + fit.doorTop);
+    assert.ok(fit.greetingTop + 1 >= fit.doorBottom, size[2] + " heading overlaps the door");
+    await shoot(size[2] + ".png");
+  }
+
   await assertBellGesture(hook);
   console.log("playback ok", JSON.stringify({ support: before.support, sources: before.sources }));
 } catch (err) {
@@ -491,12 +518,19 @@ async function assertBellGesture(baseHook) {
   await load();
   assert.equal(await ev(`document.getElementById("app").dataset.bell`), "idle", "blocked autoplay still rang");
   await clk("#open-door");
-  assert.equal(await until(`document.getElementById("app").dataset.melody === "playing"`), true, "open button did not start the melody");
+  assert.equal(await until(`document.getElementById("app").dataset.bell === "playing"`, 800), true, "open button did not play a ding-dong");
+  const chiming = await ev(`(() => {
+    const app = document.getElementById("app");
+    return { open: app.classList.contains("is-open"), bell: app.dataset.bell };
+  })()`);
+  assert.equal(chiming.open, false, "door opened before the single ding-dong");
+  assert.equal(chiming.bell, "playing");
+  assert.equal(await until(`document.getElementById("app").classList.contains("is-open") && document.getElementById("app").dataset.melody === "playing"`, 2500), true, "melody did not follow the ding-dong");
   let state = await ev(`(() => {
     const app = document.getElementById("app");
     return { bell: app.dataset.bell, melody: app.dataset.melody, overlap: app.dataset.overlap };
   })()`);
-  assert.notEqual(state.bell, "playing", "the open button started the doorbell");
+  assert.notEqual(state.bell, "playing", "the ding-dong overlapped the melody");
   assert.equal(state.melody, "playing");
   assert.equal(state.overlap, "0");
 
