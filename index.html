@@ -391,13 +391,14 @@
     .app.is-open .closed-copy { display: none; }
 
     .app.is-open {
-      justify-content: safe center;
+      justify-content: flex-start;
+      padding-top: 52px;
     }
 
     .app.is-open .doorway {
-      width: min(72vw, 250px);
+      width: min(64vw, 228px);
       background: #2a345c;
-      clip-path: inset(-40% 0 0 -170%);
+      clip-path: inset(-26px 0 0 -170%);
       box-shadow: 0 16px 34px rgba(72, 40, 62, 0.18);
     }
 
@@ -546,14 +547,15 @@
       body.is-open { overflow: hidden; }
       .app { gap: 1rem; }
       .app.is-open {
-        gap: 0.7rem;
-        padding-top: 0.85rem;
-        padding-bottom: 0.85rem;
+        gap: 0.45rem;
+        padding-top: 48px;
+        padding-bottom: 12px;
       }
       .title { font-size: 4.6rem; }
       .doorway { width: 220px; }
-      .app.is-open .doorway { width: 210px; }
-      .app.is-open .open-copy { margin-top: 1.6rem; }
+      .app.is-open .doorway { width: 168px; }
+      .app.is-open .open-copy { margin-top: 0.45rem; }
+      .app.is-open .greeting { font-size: 2.35rem; }
       .mast,
       .closed-copy,
       .open-copy { width: min(100%, 26rem); }
