@@ -8,8 +8,8 @@
   <link rel="icon" href="favicon.ico">
   <style>
     :root {
-      --night: #0c1322;
-      --night-rise: #18243d;
+      --night: #243652;
+      --night-rise: #3d5680;
       --ivory: #f6f1e8;
       --ivory-soft: #ddd6cb;
       --hint-night: #cfc7ba;
@@ -33,7 +33,7 @@
 
     body {
       background:
-        radial-gradient(ellipse at 50% 12%, var(--night-rise), var(--night) 58%);
+        radial-gradient(ellipse at 50% 0%, #56709a 0%, var(--night-rise) 38%, var(--night) 100%);
       color: var(--ivory);
       font-family: var(--sans);
       -webkit-font-smoothing: antialiased;
@@ -42,7 +42,7 @@
 
     body.is-open {
       background:
-        radial-gradient(ellipse at 50% 0%, #fff8ee 0%, var(--warm) 46%, var(--warm-deep) 100%);
+        radial-gradient(ellipse at 50% -8%, #fff8f4 0%, #ffe7da 34%, #f8d4c4 70%, #f3c4b4 100%);
       color: var(--ink);
     }
 
@@ -218,32 +218,56 @@
     .orn {
       position: absolute;
       display: block;
-      opacity: 0.22;
     }
 
-    .orn.heart { fill: #f0d7b0; filter: drop-shadow(0 0 5px rgba(255, 214, 160, 0.55)); }
-    .orn.spark { fill: #fff4df; filter: drop-shadow(0 0 4px rgba(255, 228, 190, 0.8)); }
+    .orn.heart {
+      fill: #ffe7c4;
+      opacity: 0.78;
+      filter: drop-shadow(0 0 8px rgba(255, 214, 160, 0.85));
+    }
+
+    .orn.spark {
+      fill: #fff8ee;
+      opacity: 0.9;
+      filter: drop-shadow(0 0 6px rgba(255, 236, 200, 0.95));
+    }
+
     .orn.bloom,
     .orn.petal { opacity: 0; }
 
-    .app.is-open .orn.heart { fill: #d98984; filter: none; opacity: 0.38; }
-    .app.is-open .orn.spark { fill: #e7c9a2; filter: none; opacity: 0.28; }
-    .app.is-open .orn.bloom,
-    .app.is-open .orn.petal { opacity: 0.42; }
-    .app.is-open .orn.bloom { fill: #e7b39a; }
-    .app.is-open .orn.petal { fill: #f0d3b4; }
+    .app.is-open .orn.heart {
+      fill: #e07b78;
+      opacity: 0.82;
+      filter: none;
+    }
 
-    .h1 { top: 7%; left: 6%; width: 18px; height: 16px; animation: drift 9s ease-in-out infinite; }
-    .h2 { top: 16%; right: 7%; width: 12px; height: 11px; animation: drift 11s ease-in-out -2s infinite; }
-    .h3 { top: 38%; left: 5%; width: 14px; height: 13px; animation: drift 10s ease-in-out -4s infinite; }
-    .h4 { top: 46%; right: 6%; width: 16px; height: 14px; animation: drift 12s ease-in-out -1s infinite; }
-    .s1 { top: 11%; right: 18%; width: 8px; height: 8px; animation: drift 8s ease-in-out -3s infinite; }
-    .s2 { top: 28%; left: 14%; width: 7px; height: 7px; animation: drift 9.5s ease-in-out -5s infinite; }
-    .s3 { top: 58%; right: 10%; width: 6px; height: 6px; animation: drift 10s ease-in-out -2.5s infinite; }
-    .b1 { top: 24%; right: 8%; width: 22px; height: 22px; animation: drift 13s ease-in-out -1.5s infinite; }
-    .b2 { top: 62%; left: 6%; width: 18px; height: 18px; animation: drift 12s ease-in-out -4s infinite; }
-    .p1 { top: 33%; left: 8%; width: 14px; height: 14px; animation: drift 11s ease-in-out -6s infinite; }
-    .p2 { top: 70%; right: 8%; width: 12px; height: 12px; animation: drift 10s ease-in-out -3s infinite; }
+    .app.is-open .orn.heart.soft { fill: #f0a48a; opacity: 0.7; }
+    .app.is-open .orn.spark { fill: #e8b15a; opacity: 0.85; filter: none; }
+    .app.is-open .orn.bloom { fill: #e98978; opacity: 0.78; }
+    .app.is-open .orn.bloom .core { fill: #ffe7b8; }
+    .app.is-open .orn.petal { fill: #f3c4a4; opacity: 0.8; }
+
+    .h1 { top: 3.5%; left: 3%; width: 34px; height: 30px; animation: drift 9s ease-in-out infinite; }
+    .h2 { top: 5%; right: 4%; width: 26px; height: 24px; animation: drift 11s ease-in-out -2s infinite; }
+    .h3 { top: 21%; left: 2%; width: 22px; height: 20px; animation: drift 10s ease-in-out -4s infinite; }
+    .h4 { top: 19%; right: 2.5%; width: 30px; height: 27px; animation: drift 12s ease-in-out -1s infinite; }
+    .h5 { top: 47%; left: 1.5%; width: 24px; height: 22px; animation: drift 9.5s ease-in-out -3s infinite; }
+    .h6 { top: 54%; right: 2%; width: 28px; height: 25px; animation: drift 11.5s ease-in-out -5s infinite; }
+    .h7 { bottom: 5%; left: 4%; width: 32px; height: 28px; animation: drift 10s ease-in-out -2.4s infinite; }
+    .h8 { bottom: 3.5%; right: 5%; width: 36px; height: 32px; animation: drift 12s ease-in-out -1.2s infinite; }
+    .s1 { top: 13%; left: 16%; width: 14px; height: 14px; animation: twinkle 3.2s ease-in-out infinite; }
+    .s2 { top: 12%; right: 18%; width: 12px; height: 12px; animation: twinkle 2.6s ease-in-out -1s infinite; }
+    .s3 { top: 34%; left: 8%; width: 11px; height: 11px; animation: twinkle 3.6s ease-in-out -0.6s infinite; }
+    .s4 { top: 36%; right: 9%; width: 13px; height: 13px; animation: twinkle 2.8s ease-in-out -1.8s infinite; }
+    .s5 { bottom: 16%; left: 14%; width: 12px; height: 12px; animation: twinkle 3.4s ease-in-out -2.2s infinite; }
+    .s6 { bottom: 11%; right: 16%; width: 15px; height: 15px; animation: twinkle 2.9s ease-in-out -0.4s infinite; }
+    .b1 { top: 28%; right: 1%; width: 42px; height: 42px; animation: drift 13s ease-in-out -1.5s infinite; }
+    .b2 { top: 63%; left: 1%; width: 38px; height: 38px; animation: drift 12s ease-in-out -4s infinite; }
+    .b3 { bottom: 9%; right: 2%; width: 36px; height: 36px; animation: drift 14s ease-in-out -2s infinite; }
+    .b4 { top: 72%; right: 3%; width: 30px; height: 30px; animation: drift 11s ease-in-out -6s infinite; }
+    .p1 { top: 41%; left: 3%; width: 22px; height: 28px; animation: drift 11s ease-in-out -3s infinite; }
+    .p2 { top: 58%; right: 4%; width: 18px; height: 24px; animation: drift 10s ease-in-out -5s infinite; }
+    .p3 { bottom: 14%; left: 7%; width: 20px; height: 26px; animation: drift 12s ease-in-out -1s infinite; }
 
     .door {
       position: absolute;
@@ -377,7 +401,7 @@
       padding: 0.9rem 1.1rem;
       border: 1px solid rgba(36, 28, 22, 0.14);
       border-radius: 14px;
-      background: var(--paper);
+      background: #fffdfb;
       color: var(--ink);
       font-size: 1.375rem;
       font-weight: 600;
@@ -436,7 +460,12 @@
 
     @keyframes drift {
       0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-7px); }
+      50% { transform: translateY(-12px); }
+    }
+
+    @keyframes twinkle {
+      0%, 100% { opacity: 0.35; }
+      50% { opacity: 1; }
     }
 
     @media (max-height: 760px) {
@@ -492,16 +521,26 @@
   <main id="app" class="app is-closed" data-melody="idle" data-bell="idle" data-overlap="0" data-active-voice="">
     <div class="decor" aria-hidden="true">
       <svg class="orn heart h1" viewBox="0 0 32 30"><path d="M16 27 C6 18 2 12 8 7 C12 4 15 7 16 10 C17 7 20 4 24 7 C30 12 26 18 16 27 Z"/></svg>
-      <svg class="orn heart h2" viewBox="0 0 32 30"><path d="M16 27 C6 18 2 12 8 7 C12 4 15 7 16 10 C17 7 20 4 24 7 C30 12 26 18 16 27 Z"/></svg>
+      <svg class="orn heart soft h2" viewBox="0 0 32 30"><path d="M16 27 C6 18 2 12 8 7 C12 4 15 7 16 10 C17 7 20 4 24 7 C30 12 26 18 16 27 Z"/></svg>
       <svg class="orn heart h3" viewBox="0 0 32 30"><path d="M16 27 C6 18 2 12 8 7 C12 4 15 7 16 10 C17 7 20 4 24 7 C30 12 26 18 16 27 Z"/></svg>
-      <svg class="orn heart h4" viewBox="0 0 32 30"><path d="M16 27 C6 18 2 12 8 7 C12 4 15 7 16 10 C17 7 20 4 24 7 C30 12 26 18 16 27 Z"/></svg>
+      <svg class="orn heart soft h4" viewBox="0 0 32 30"><path d="M16 27 C6 18 2 12 8 7 C12 4 15 7 16 10 C17 7 20 4 24 7 C30 12 26 18 16 27 Z"/></svg>
+      <svg class="orn heart h5" viewBox="0 0 32 30"><path d="M16 27 C6 18 2 12 8 7 C12 4 15 7 16 10 C17 7 20 4 24 7 C30 12 26 18 16 27 Z"/></svg>
+      <svg class="orn heart soft h6" viewBox="0 0 32 30"><path d="M16 27 C6 18 2 12 8 7 C12 4 15 7 16 10 C17 7 20 4 24 7 C30 12 26 18 16 27 Z"/></svg>
+      <svg class="orn heart h7" viewBox="0 0 32 30"><path d="M16 27 C6 18 2 12 8 7 C12 4 15 7 16 10 C17 7 20 4 24 7 C30 12 26 18 16 27 Z"/></svg>
+      <svg class="orn heart soft h8" viewBox="0 0 32 30"><path d="M16 27 C6 18 2 12 8 7 C12 4 15 7 16 10 C17 7 20 4 24 7 C30 12 26 18 16 27 Z"/></svg>
       <svg class="orn spark s1" viewBox="0 0 16 16"><path d="M8 0 L9.2 6.8 L16 8 L9.2 9.2 L8 16 L6.8 9.2 L0 8 L6.8 6.8 Z"/></svg>
       <svg class="orn spark s2" viewBox="0 0 16 16"><path d="M8 0 L9.2 6.8 L16 8 L9.2 9.2 L8 16 L6.8 9.2 L0 8 L6.8 6.8 Z"/></svg>
       <svg class="orn spark s3" viewBox="0 0 16 16"><path d="M8 0 L9.2 6.8 L16 8 L9.2 9.2 L8 16 L6.8 9.2 L0 8 L6.8 6.8 Z"/></svg>
-      <svg class="orn bloom b1" viewBox="0 0 32 32"><circle cx="16" cy="10" r="5"/><circle cx="22" cy="16" r="5"/><circle cx="16" cy="22" r="5"/><circle cx="10" cy="16" r="5"/><circle cx="16" cy="16" r="3.2" fill="#f6e7c4"/></svg>
-      <svg class="orn bloom b2" viewBox="0 0 32 32"><circle cx="16" cy="10" r="5"/><circle cx="22" cy="16" r="5"/><circle cx="16" cy="22" r="5"/><circle cx="10" cy="16" r="5"/><circle cx="16" cy="16" r="3.2" fill="#f6e7c4"/></svg>
-      <svg class="orn petal p1" viewBox="0 0 20 28"><ellipse cx="10" cy="14" rx="6" ry="12" transform="rotate(-28 10 14)"/></svg>
-      <svg class="orn petal p2" viewBox="0 0 20 28"><ellipse cx="10" cy="14" rx="6" ry="12" transform="rotate(24 10 14)"/></svg>
+      <svg class="orn spark s4" viewBox="0 0 16 16"><path d="M8 0 L9.2 6.8 L16 8 L9.2 9.2 L8 16 L6.8 9.2 L0 8 L6.8 6.8 Z"/></svg>
+      <svg class="orn spark s5" viewBox="0 0 16 16"><path d="M8 0 L9.2 6.8 L16 8 L9.2 9.2 L8 16 L6.8 9.2 L0 8 L6.8 6.8 Z"/></svg>
+      <svg class="orn spark s6" viewBox="0 0 16 16"><path d="M8 0 L9.2 6.8 L16 8 L9.2 9.2 L8 16 L6.8 9.2 L0 8 L6.8 6.8 Z"/></svg>
+      <svg class="orn bloom b1" viewBox="0 0 32 32"><circle cx="16" cy="9" r="6"/><circle cx="23" cy="16" r="6"/><circle cx="16" cy="23" r="6"/><circle cx="9" cy="16" r="6"/><circle class="core" cx="16" cy="16" r="3.4" fill="#ffe7b8"/></svg>
+      <svg class="orn bloom b2" viewBox="0 0 32 32"><circle cx="16" cy="9" r="6"/><circle cx="23" cy="16" r="6"/><circle cx="16" cy="23" r="6"/><circle cx="9" cy="16" r="6"/><circle class="core" cx="16" cy="16" r="3.4" fill="#ffe7b8"/></svg>
+      <svg class="orn bloom b3" viewBox="0 0 32 32"><circle cx="16" cy="9" r="6"/><circle cx="23" cy="16" r="6"/><circle cx="16" cy="23" r="6"/><circle cx="9" cy="16" r="6"/><circle class="core" cx="16" cy="16" r="3.4" fill="#ffe7b8"/></svg>
+      <svg class="orn bloom b4" viewBox="0 0 32 32"><circle cx="16" cy="9" r="6"/><circle cx="23" cy="16" r="6"/><circle cx="16" cy="23" r="6"/><circle cx="9" cy="16" r="6"/><circle class="core" cx="16" cy="16" r="3.4" fill="#ffe7b8"/></svg>
+      <svg class="orn petal p1" viewBox="0 0 20 28"><ellipse cx="10" cy="14" rx="7" ry="12" transform="rotate(-28 10 14)"/></svg>
+      <svg class="orn petal p2" viewBox="0 0 20 28"><ellipse cx="10" cy="14" rx="7" ry="12" transform="rotate(24 10 14)"/></svg>
+      <svg class="orn petal p3" viewBox="0 0 20 28"><ellipse cx="10" cy="14" rx="7" ry="12" transform="rotate(-12 10 14)"/></svg>
     </div>
     <header class="mast">
       <h1 class="title" id="closed-title">Ульяна, 19</h1>
