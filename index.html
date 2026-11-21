@@ -160,8 +160,51 @@
     .interior {
       position: absolute;
       inset: 0;
+      overflow: hidden;
       background:
-        radial-gradient(circle at 58% 42%, #fffaf2 0%, #f6e2c4 42%, #e7c89a 100%);
+        radial-gradient(circle at 58% 38%, #fffaf2 0%, #f6e2c4 46%, #e7c89a 100%);
+    }
+
+    .family {
+      display: block;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+    }
+
+    .app.is-open .family {
+      animation: appear 0.8s ease 0.28s both;
+    }
+
+    .fig,
+    .wave,
+    .wag,
+    .cat-tail {
+      transform-box: fill-box;
+      transform-origin: center bottom;
+    }
+
+    .fig { animation: sway 3.6s ease-in-out infinite; }
+    .fig-taya { animation-duration: 3.1s; animation-delay: -0.7s; }
+    .fig-dad { animation-duration: 4s; animation-delay: -1.2s; }
+    .fig-dog { animation-duration: 2.6s; animation-delay: -0.3s; }
+    .fig-cat { animation-duration: 3.8s; animation-delay: -1.6s; }
+
+    .wave {
+      transform-origin: 10% 90%;
+      animation: wave 1.8s ease-in-out infinite;
+    }
+
+    .wave-soft { animation-duration: 2.15s; animation-delay: -0.45s; }
+
+    .wag {
+      transform-origin: 0% 70%;
+      animation: wag 0.48s ease-in-out infinite;
+    }
+
+    .cat-tail {
+      transform-origin: 8% 90%;
+      animation: curl 2.4s ease-in-out infinite;
     }
 
     .door {
@@ -235,12 +278,20 @@
     .app.is-open .mast,
     .app.is-open .closed-copy { display: none; }
 
+    .app.is-open {
+      justify-content: safe center;
+    }
+
     .app.is-open .doorway {
-      width: min(46vw, 156px);
+      width: min(72vw, 250px);
       box-shadow:
         0 0 0 1px rgba(36, 28, 22, 0.16),
         0 16px 28px rgba(80, 50, 20, 0.16);
     }
+
+    .app.is-ringing .doorway { animation: knock 0.52s ease-in-out 3; }
+
+    .app.is-ringing .light-edge { animation: glow 1.15s ease-in-out infinite; }
 
     .app.is-open .door { transform: rotateY(-108deg); }
 
@@ -318,18 +369,56 @@
       to { opacity: 1; transform: none; }
     }
 
+    @keyframes knock {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-1.5px); }
+      50% { transform: translateX(1.5px); }
+      75% { transform: translateX(-0.75px); }
+    }
+
+    @keyframes glow {
+      0%, 100% { opacity: 0.45; }
+      50% { opacity: 1; }
+    }
+
+    @keyframes sway {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-3px); }
+    }
+
+    @keyframes wave {
+      0%, 100% { transform: rotate(0deg); }
+      50% { transform: rotate(-14deg); }
+    }
+
+    @keyframes wag {
+      0%, 100% { transform: rotate(10deg); }
+      50% { transform: rotate(-16deg); }
+    }
+
+    @keyframes curl {
+      0%, 100% { transform: rotate(7deg); }
+      50% { transform: rotate(-12deg); }
+    }
+
     @media (max-height: 760px) {
-      .app { gap: 0.95rem; }
-      .doorway { width: min(48vw, 160px); }
-      .app.is-open .doorway { width: min(38vw, 128px); }
-      .voice { min-height: 3.6rem; padding-top: 0.7rem; padding-bottom: 0.7rem; }
+      .app { gap: 0.85rem; }
+      .doorway { width: min(52vw, 180px); }
+      .app.is-open .doorway { width: min(66vw, 220px); }
+      .voice { min-height: 3.5rem; padding-top: 0.7rem; padding-bottom: 0.7rem; }
     }
 
     @media (min-width: 800px) {
-      .app { gap: 1.6rem; }
+      body.is-open { overflow: hidden; }
+      .app { gap: 1rem; }
+      .app.is-open {
+        gap: 0.7rem;
+        padding-top: 0.85rem;
+        padding-bottom: 0.85rem;
+      }
       .title { font-size: 4.6rem; }
       .doorway { width: 220px; }
-      .app.is-open .doorway { width: 168px; }
+      .app.is-open .doorway { width: 210px; }
       .mast,
       .closed-copy,
       .open-copy { width: min(100%, 26rem); }
@@ -347,22 +436,89 @@
         transition: none !important;
       }
 
-      .app.is-open .open-copy { animation: none; }
+      .app.is-open .open-copy,
+      .app.is-open .family,
+      .fig,
+      .wave,
+      .wag,
+      .cat-tail,
+      .app.is-ringing .doorway,
+      .app.is-ringing .light-edge {
+        animation: none !important;
+      }
+
+      .app.is-open .family { opacity: 1; }
     }
   </style>
 </head>
 <body>
-  <main id="app" class="app is-closed" data-melody="idle" data-active-voice="">
+  <main id="app" class="app is-closed" data-melody="idle" data-bell="idle" data-overlap="0" data-active-voice="">
     <header class="mast">
       <h1 class="title" id="closed-title">Ульяна, 19</h1>
       <p class="date" id="date">22 ноября</p>
     </header>
 
-    <div class="doorway" id="doorway" aria-hidden="true">
+    <div class="doorway" id="doorway">
       <span class="hinge hinge-top"></span>
       <span class="hinge hinge-bottom"></span>
       <div class="opening">
-        <div class="interior"></div>
+        <div class="interior">
+          <svg class="family" viewBox="0 0 180 300" role="img" aria-label="Мама, Тая, папа, золотистый лабрадор и светлая кошка с полосатым хвостом">
+            <rect x="0" y="248" width="180" height="52" fill="#e8cfa6"/>
+            <g class="fig fig-mum">
+              <path d="M22 262 L34 128 Q48 116 62 128 L74 262 Z" fill="#8a4a42"/>
+              <rect x="44" y="116" width="8" height="14" rx="3" fill="#efd3bf"/>
+              <circle cx="48" cy="108" r="12" fill="#efd3bf"/>
+              <path d="M36 110 Q38 90 48 88 Q60 90 61 112 Q54 98 48 96 Q42 98 36 110 Z" fill="#2b2422"/>
+              <g class="wave">
+                <path d="M62 146 Q82 124 74 104" fill="none" stroke="#efd3bf" stroke-width="5" stroke-linecap="round"/>
+              </g>
+            </g>
+            <g class="fig fig-taya">
+              <path d="M70 264 L80 146 Q94 134 108 146 L118 264 Z" fill="#6d5648"/>
+              <rect x="90" y="134" width="8" height="14" rx="3" fill="#f0d5c2"/>
+              <circle cx="94" cy="126" r="11" fill="#f0d5c2"/>
+              <path d="M83 128 Q86 108 94 106 Q105 108 106 130 Q99 116 94 114 Q88 116 83 128 Z" fill="#241e1c"/>
+              <g class="wave wave-soft">
+                <path d="M106 162 Q124 146 118 126" fill="none" stroke="#f0d5c2" stroke-width="4.5" stroke-linecap="round"/>
+              </g>
+            </g>
+            <g class="fig fig-dad">
+              <path d="M112 262 L124 118 Q146 104 168 118 L176 262 Z" fill="#2a3548"/>
+              <rect x="140" y="104" width="10" height="16" rx="3" fill="#e6c4a6"/>
+              <circle cx="145" cy="96" r="13" fill="#e6c4a6"/>
+              <path d="M132 100 Q135 78 145 76 Q158 78 159 102 Q151 86 145 84 Q138 86 132 100 Z" fill="#241e1c"/>
+              <g class="wave">
+                <path d="M124 138 Q106 118 112 98" fill="none" stroke="#e6c4a6" stroke-width="5.5" stroke-linecap="round"/>
+              </g>
+            </g>
+            <g class="fig fig-dog">
+              <path d="M118 258 L122 244" stroke="#e0b15a" stroke-width="5" stroke-linecap="round"/>
+              <path d="M158 256 L162 244" stroke="#e0b15a" stroke-width="5" stroke-linecap="round"/>
+              <ellipse cx="140" cy="238" rx="22" ry="12" fill="#e0b15a"/>
+              <circle cx="118" cy="224" r="11" fill="#e0b15a"/>
+              <ellipse cx="110" cy="216" rx="4.5" ry="8" fill="#c4923e" transform="rotate(-24 110 216)"/>
+              <ellipse cx="124" cy="214" rx="4" ry="7" fill="#c4923e" transform="rotate(12 124 214)"/>
+              <g class="wag">
+                <path d="M160 230 Q178 216 172 198" fill="none" stroke="#e0b15a" stroke-width="5.5" stroke-linecap="round"/>
+              </g>
+            </g>
+            <g class="fig fig-cat">
+              <path d="M22 260 L26 248" stroke="#f7f3ec" stroke-width="3.5" stroke-linecap="round"/>
+              <path d="M46 260 L44 248" stroke="#f7f3ec" stroke-width="3.5" stroke-linecap="round"/>
+              <ellipse cx="34" cy="244" rx="15" ry="8" fill="#f7f3ec"/>
+              <circle cx="20" cy="234" r="7.5" fill="#f7f3ec"/>
+              <path d="M14 228 L10 218 L20 226 Z" fill="#f7f3ec"/>
+              <path d="M24 228 L30 218 L24 226 Z" fill="#f7f3ec"/>
+              <g class="cat-tail">
+                <path d="M48 242 C66 240 72 222 64 208" fill="none" stroke="#f7f3ec" stroke-width="4.5" stroke-linecap="round"/>
+                <path d="M58 236 L64 232" stroke="#c4a07a" stroke-width="3.2" stroke-linecap="round"/>
+                <path d="M66 224 L72 218" stroke="#7a5b40" stroke-width="3.2" stroke-linecap="round"/>
+                <path d="M62 212 L68 206" stroke="#c4a07a" stroke-width="3.2" stroke-linecap="round"/>
+              </g>
+            </g>
+          </svg>
+        </div>
         <div class="door" id="door">
           <div class="face front">
             <span class="handle"></span>
@@ -451,9 +607,17 @@
       var openBtn = document.getElementById("open-door");
       var buttons = Array.prototype.slice.call(document.querySelectorAll(".voice"));
 
+      var BELL_RINGS = 3;
+      var BELL_GAP = 1.2;
+
       var opened = false;
       var ctx = null;
       var master = null;
+      var bellBus = null;
+      var bellNodes = [];
+      var bellStarted = false;
+      var bellCancelled = false;
+      var bellTimer = 0;
       var melodyNodes = [];
       var melodyStarted = false;
       var melodyCancelled = false;
@@ -520,12 +684,106 @@
         }
       }
 
+      function markOverlap() {
+        var bellOn = app.dataset.bell === "playing";
+        var otherOn = app.dataset.melody === "playing" || !!app.dataset.activeVoice;
+        if (bellOn && otherOn) app.dataset.overlap = "1";
+      }
+
+      function strike(frequency, time, dur, volume) {
+        var partials = [1, 2, 2.76];
+        var amps = [1, 0.32, 0.16];
+        for (var i = 0; i < partials.length; i++) {
+          if (frequency * partials[i] > 4800) continue;
+          var osc = ctx.createOscillator();
+          var gain = ctx.createGain();
+          osc.type = "sine";
+          osc.frequency.setValueAtTime(frequency * partials[i], time);
+          var peak = Math.max(0.0002, volume * amps[i]);
+          gain.gain.setValueAtTime(0.0001, time);
+          gain.gain.exponentialRampToValueAtTime(peak, time + 0.008);
+          gain.gain.exponentialRampToValueAtTime(0.0001, time + dur);
+          osc.connect(gain);
+          gain.connect(bellBus);
+          osc.start(time);
+          osc.stop(time + dur + 0.04);
+          bellNodes.push({ osc: osc, when: time });
+        }
+      }
+
+      function playDingDong(time) {
+        strike(freq("A5"), time, 0.24, 0.22);
+        strike(freq("E5"), time + 0.17, 0.62, 0.2);
+      }
+
+      function startBell() {
+        if (bellCancelled || bellStarted || opened || melodyStarted || melodyCancelled) return;
+        if (!ctx || ctx.state !== "running" || !bellBus) return;
+        bellStarted = true;
+        app.dataset.bell = "playing";
+        app.classList.add("is-ringing");
+        var t0 = ctx.currentTime + 0.02;
+        for (var r = 0; r < BELL_RINGS; r++) playDingDong(t0 + r * BELL_GAP);
+        bellTimer = window.setTimeout(function () {
+          if (bellCancelled) return;
+          app.classList.remove("is-ringing");
+          app.dataset.bell = "done";
+        }, (BELL_RINGS - 1) * BELL_GAP * 1000 + 900);
+        markOverlap();
+      }
+
+      function stopBell() {
+        bellCancelled = true;
+        if (bellTimer) {
+          window.clearTimeout(bellTimer);
+          bellTimer = 0;
+        }
+        app.classList.remove("is-ringing");
+        if (ctx && bellBus) {
+          var now = ctx.currentTime;
+          try {
+            bellBus.gain.cancelScheduledValues(now);
+            bellBus.gain.setValueAtTime(0.00001, now);
+          } catch (err) {}
+        }
+        for (var i = 0; i < bellNodes.length; i++) {
+          var item = bellNodes[i];
+          var when = item.when > ctx.currentTime ? item.when + 0.001 : ctx.currentTime;
+          try { item.osc.stop(when); } catch (err) {}
+          try { item.osc.disconnect(); } catch (err) {}
+        }
+        bellNodes = [];
+        if (bellStarted) app.dataset.bell = "stopped";
+      }
+
+      function ensureAudio() {
+        if (ctx && master && ctx.state !== "closed") return true;
+        var AC = window.AudioContext || window.webkitAudioContext;
+        if (!AC) return false;
+        try {
+          ctx = new AC();
+          master = ctx.createGain();
+          master.gain.value = 0.85;
+          master.connect(ctx.destination);
+          bellBus = ctx.createGain();
+          bellBus.connect(master);
+        } catch (err) {
+          ctx = null;
+          master = null;
+          bellBus = null;
+          return false;
+        }
+        return true;
+      }
+
       function beginMelody() {
-        if (melodyCancelled || melodyStarted || !ctx || !master) return;
+        stopBell();
+        if (melodyCancelled || melodyStarted || !ctx || !master || ctx.state === "closed") return;
         melodyStarted = true;
         var t = ctx.currentTime + 0.12;
         scheduleSong(t);
         app.dataset.melody = "playing";
+        markOverlap();
       }
 
       function stopMelody() {
@@ -593,6 +851,7 @@
         var audio = voiceAudio(button);
         var file = button.getAttribute("data-file");
         var shouldPause = !audio.paused;
+        stopBell();
         stopMelody();
         stopOthers(audio);
         if (shouldPause) {
@@ -605,6 +864,7 @@
         activeFile = file;
         setIcon(button, true);
         app.dataset.activeVoice = file;
+        markOverlap();
         var pending = audio.play();
         if (pending && pending.catch) {
           pending.catch(function () {
@@ -652,27 +912,45 @@
       function openDoor() {
         if (opened) return;
         opened = true;
+        stopBell();
         app.classList.remove("is-closed");
         app.classList.add("is-open");
         document.body.classList.add("is-open");
         warmVoices();
-        var AC = window.AudioContext || window.webkitAudioContext;
-        if (!AC) return;
-        try {
-          ctx = new AC();
-          master = ctx.createGain();
-          master.gain.value = 0.85;
-          master.connect(ctx.destination);
-        } catch (err) {
-          ctx = null;
-          return;
-        }
+        if (!ensureAudio()) return;
         var resumed = ctx.resume();
         if (resumed && resumed.then) resumed.then(beginMelody, beginMelody);
         else beginMelody();
       }
 
+      function onAnywhere(event) {
+        if (bellCancelled || bellStarted || opened) return;
+        if (event.target && event.target.closest && event.target.closest("#open-door")) return;
+        if (!ensureAudio()) return;
+        var resumed = ctx.resume();
+        var go = function () {
+          if (bellCancelled || opened || bellStarted) return;
+          if (ctx.state === "running") startBell();
+        };
+        if (resumed && resumed.then) resumed.then(go, function () {});
+        else go();
+      }
+
+      function tryAutoplay() {
+        if (!ensureAudio()) return;
+        var resumed = ctx.resume();
+        var go = function () {
+          if (bellCancelled || opened || bellStarted) return;
+          if (ctx && ctx.state === "running") startBell();
+        };
+        if (resumed && resumed.then) resumed.then(go, function () {});
+        else go();
+      }
+
       assignSources();
+      document.addEventListener("pointerdown", onAnywhere, true);
+      document.addEventListener("click", onAnywhere, true);
+      tryAutoplay();
       for (var i = 0; i < buttons.length; i++) {
         watchAudio(buttons[i]);
         buttons[i].addEventListener("click", function (event) {
