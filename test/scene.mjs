@@ -139,7 +139,13 @@ assert.equal(/for\s*\(/.test(beginMelody[1]), false, "melody is not looped");
 assert.equal((beginMelody[1].match(/scheduleSong\(/g) || []).length, 1, "melody plays once");
 const openDoor = script.match(/function openDoor\(\) \{([\s\S]*?)\n      \}/);
 assert.ok(openDoor, "openDoor");
-assert.ok(openDoor[1].indexOf("stopBell()") !== -1 && openDoor[1].indexOf("stopBell()") < openDoor[1].indexOf("beginMelody"));
+assert.match(openDoor[1], /if \(!bellStarted\)/);
+assert.match(openDoor[1], /chimeOnce\(revealDoor\)/);
+assert.match(openDoor[1], /stopBell\(\)/);
+const revealDoor = script.match(/function revealDoor\(\) \{([\s\S]*?)\n      \}/);
+assert.ok(revealDoor, "revealDoor");
+assert.ok(revealDoor[1].indexOf("stopBell()") !== -1 && revealDoor[1].indexOf("stopBell()") < revealDoor[1].indexOf("beginMelody"));
+assert.match(script, /playDingDong\(ctx\.currentTime/);
 
 const onVoice = script.match(/function onVoice\(button\) \{([\s\S]*?)\n      \}/);
 assert.ok(onVoice, "onVoice");
