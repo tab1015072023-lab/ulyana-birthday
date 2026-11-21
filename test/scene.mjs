@@ -35,22 +35,24 @@ assert.equal(/<audio[^>]*autoplay/.test(html), false);
 const names = [...html.matchAll(/<span class="name">([^<]+)<\/span>/g)].map((m) => m[1]);
 assert.deepEqual(names, ["Мама", "Тая", "Папа"]);
 
-const files = [...html.matchAll(/data-file="(audio_\d)"/g)].map((m) => m[1]);
-assert.deepEqual(files.slice(0, 3), ["audio_1", "audio_2", "audio_3"]);
+const voices = [...html.matchAll(/data-file="(mama|taya|papa)"[\s\S]*?<span class="name">([^<]+)<\/span>/g)];
+assert.deepEqual(voices.map((m) => [m[2], m[1]]), [["Мама", "mama"], ["Тая", "taya"], ["Папа", "papa"]]);
 
-for (const n of [1, 2, 3]) {
-  const block = html.match(new RegExp(`<audio id="audio-${n}"[\\s\\S]*?<\\/audio>`));
-  assert.ok(block, "audio " + n);
+for (const name of ["mama", "taya", "papa"]) {
+  const block = html.match(new RegExp(`<audio id="${name}"[\\s\\S]*?<\\/audio>`));
+  assert.ok(block, "audio " + name);
   const sources = [...block[0].matchAll(/src="([^"]+)"/g)].map((m) => m[1]);
-  assert.deepEqual(sources, [`audio/audio_${n}.m4a`, `audio/audio_${n}.mp3`]);
+  assert.deepEqual(sources, [`audio/${name}.m4a`, `audio/${name}.mp3`]);
   assert.match(block[0], /type="audio\/mp4"/);
   assert.match(block[0], /type="audio\/mpeg"/);
   assert.equal(block[0].includes(".ogg"), false);
-  const m4a = fs.readFileSync(new URL(`audio/audio_${n}.m4a`, root));
-  const mp3 = fs.readFileSync(new URL(`audio/audio_${n}.mp3`, root));
+  const m4a = fs.readFileSync(new URL(`audio/${name}.m4a`, root));
+  const mp3 = fs.readFileSync(new URL(`audio/${name}.mp3`, root));
+  const ogg = fs.readFileSync(new URL(`audio/${name}.ogg`, root));
   assert.ok(m4a.includes(Buffer.from("ftyp")), "m4a container");
   assert.ok(m4a.includes(Buffer.from("mp4a")), "aac sample entry");
   assert.ok(mp3.subarray(0, 3).equals(Buffer.from("ID3")) || mp3[0] === 0xff, "mp3");
+  assert.ok(ogg.length > 0, "ogg copy");
 }
 
 assert.match(html, /rotateY\(-108deg\)/);

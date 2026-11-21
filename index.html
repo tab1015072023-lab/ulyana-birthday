@@ -383,30 +383,30 @@
       <h1 class="greeting" id="greeting"><span class="line">С днём рождения,</span> <span class="line">Ульяна!</span></h1>
       <p class="hint" id="listen-hint">Нажми, чтобы послушать</p>
       <div class="voices" id="voices">
-        <button type="button" class="voice" data-file="audio_1" aria-pressed="false">
+        <button type="button" class="voice" data-file="mama" aria-pressed="false">
           <span class="icon" aria-hidden="true">▶️</span><span class="name">Мама</span>
         </button>
-        <button type="button" class="voice" data-file="audio_2" aria-pressed="false">
+        <button type="button" class="voice" data-file="taya" aria-pressed="false">
           <span class="icon" aria-hidden="true">▶️</span><span class="name">Тая</span>
         </button>
-        <button type="button" class="voice" data-file="audio_3" aria-pressed="false">
+        <button type="button" class="voice" data-file="papa" aria-pressed="false">
           <span class="icon" aria-hidden="true">▶️</span><span class="name">Папа</span>
         </button>
       </div>
     </section>
   </main>
 
-  <audio id="audio-1" data-file="audio_1" preload="none">
-    <source src="audio/audio_1.m4a" type="audio/mp4">
-    <source src="audio/audio_1.mp3" type="audio/mpeg">
+  <audio id="mama" data-file="mama" preload="none">
+    <source src="audio/mama.m4a" type="audio/mp4">
+    <source src="audio/mama.mp3" type="audio/mpeg">
   </audio>
-  <audio id="audio-2" data-file="audio_2" preload="none">
-    <source src="audio/audio_2.m4a" type="audio/mp4">
-    <source src="audio/audio_2.mp3" type="audio/mpeg">
+  <audio id="taya" data-file="taya" preload="none">
+    <source src="audio/taya.m4a" type="audio/mp4">
+    <source src="audio/taya.mp3" type="audio/mpeg">
   </audio>
-  <audio id="audio-3" data-file="audio_3" preload="none">
-    <source src="audio/audio_3.m4a" type="audio/mp4">
-    <source src="audio/audio_3.mp3" type="audio/mpeg">
+  <audio id="papa" data-file="papa" preload="none">
+    <source src="audio/papa.m4a" type="audio/mp4">
+    <source src="audio/papa.mp3" type="audio/mpeg">
   </audio>
 
   <script>
@@ -576,7 +576,7 @@
       }
 
       function voiceAudio(button) {
-        return document.getElementById(button.getAttribute("data-file").replace("audio_", "audio-"));
+        return document.getElementById(button.getAttribute("data-file"));
       }
 
       function stopOthers(current) {

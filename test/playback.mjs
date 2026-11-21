@@ -234,11 +234,10 @@ try {
   assert.equal(before.greetingHidden, true);
   assert.equal(before.melody, "idle");
   assert.equal(before.closed, true);
-  assert.equal(before.sources.length, 3);
-  for (let i = 0; i < 3; i++) {
-    assert.match(before.sources[i], new RegExp(`audio_${i + 1}\\.(m4a|mp3)$`));
-    if (before.support.m4a) assert.match(before.sources[i], /\.m4a$/);
-    else assert.match(before.sources[i], /\.mp3$/);
+  assert.deepEqual(before.sources.map((src) => src.match(/\/(mama|taya|papa)\./)[1]), ["mama", "taya", "papa"]);
+  for (const src of before.sources) {
+    if (before.support.m4a) assert.match(src, /\.m4a$/);
+    else assert.match(src, /\.mp3$/);
   }
   await shoot("closed_door_mobile.png");
 
@@ -270,11 +269,11 @@ try {
   await new Promise((r) => setTimeout(r, 1200));
   await shoot("opened_mobile.png");
 
-  await click('.voice[data-file="audio_1"]');
+  await click('.voice[data-file="mama"]');
   assert.equal(await waitFor(`(() => {
-    const a = document.getElementById("audio-1");
+    const a = document.getElementById("mama");
     const app = document.getElementById("app");
-    return !a.paused && app.dataset.melody === "stopped" && app.dataset.activeVoice === "audio_1";
+    return !a.paused && app.dataset.melody === "stopped" && app.dataset.activeVoice === "mama";
   })()`), true, "mama did not start: " + JSON.stringify(await voiceState()));
   assert.equal(await waitFor(`window.__ctx && window.__ctx.state === "closed"`), true, "melody context was not closed");
   await new Promise((r) => setTimeout(r, 350));
@@ -290,8 +289,8 @@ try {
   assert.ok(mama.times[0] > 0, "mama should be advancing");
   assert.equal(mama.times[1], 0);
   assert.equal(mama.times[2], 0);
-  assert.match(mama.sources[0], /audio_1\.(m4a|mp3)$/);
-  assert.ok(mama.starts.filter((s) => s.startsWith("media:")).every((s) => s === "media:audio_1"));
+  assert.match(mama.sources[0], /\/mama\.(m4a|mp3)$/);
+  assert.ok(mama.starts.filter((s) => s.startsWith("media:")).every((s) => s === "media:mama"));
   await shoot("voice_playing_mobile.png");
 
   await new Promise((r) => setTimeout(r, 250));
@@ -300,8 +299,8 @@ try {
   assert.equal(still.context, "closed");
   assert.ok(still.starts.filter((s) => s === "audiocontext").length === 1);
 
-  await click('.voice[data-file="audio_1"]');
-  assert.equal(await waitFor(`document.getElementById("audio-1").paused === true`), true, "pause did not apply");
+  await click('.voice[data-file="mama"]');
+  assert.equal(await waitFor(`document.getElementById("mama").paused === true`), true, "pause did not apply");
   const paused = await voiceState();
   assert.equal(paused.icons[0], "▶️");
   assert.equal(paused.paused[0], true);
@@ -309,8 +308,8 @@ try {
   assert.equal(paused.melody, "stopped");
   const pausedAt = paused.times[0];
 
-  await click('.voice[data-file="audio_1"]');
-  assert.equal(await waitFor(`!document.getElementById("audio-1").paused && document.getElementById("app").dataset.activeVoice === "audio_1"`), true, "resume did not play");
+  await click('.voice[data-file="mama"]');
+  assert.equal(await waitFor(`!document.getElementById("mama").paused && document.getElementById("app").dataset.activeVoice === "mama"`), true, "resume did not play");
   await new Promise((r) => setTimeout(r, 200));
   const resumed = await voiceState();
   assert.equal(resumed.icons[0], "⏸️");
@@ -318,8 +317,8 @@ try {
   assert.ok(resumed.times[0] + 0.05 >= pausedAt, "resume restarted instead of continuing");
   assert.equal(resumed.melody, "stopped");
 
-  await click('.voice[data-file="audio_2"]');
-  assert.equal(await waitFor(`!document.getElementById("audio-2").paused && document.getElementById("app").dataset.activeVoice === "audio_2"`), true, "taya did not start");
+  await click('.voice[data-file="taya"]');
+  assert.equal(await waitFor(`!document.getElementById("taya").paused && document.getElementById("app").dataset.activeVoice === "taya"`), true, "taya did not start");
   const taya = await voiceState();
   assert.equal(taya.paused[0], true);
   assert.equal(taya.times[0], 0, "previous voice is stopped");
@@ -327,23 +326,23 @@ try {
   assert.equal(taya.icons[0], "▶️");
   assert.equal(taya.icons[1], "⏸️");
   assert.equal(taya.icons[2], "▶️");
-  assert.match(taya.sources[1], /audio_2\.(m4a|mp3)$/);
+  assert.match(taya.sources[1], /\/taya\.(m4a|mp3)$/);
   assert.equal(taya.melody, "stopped");
 
-  await click('.voice[data-file="audio_3"]');
-  assert.equal(await waitFor(`!document.getElementById("audio-3").paused && document.getElementById("app").dataset.activeVoice === "audio_3"`), true, "papa did not start");
+  await click('.voice[data-file="papa"]');
+  assert.equal(await waitFor(`!document.getElementById("papa").paused && document.getElementById("app").dataset.activeVoice === "papa"`), true, "papa did not start");
   const papa = await voiceState();
   assert.equal(papa.paused[1], true);
   assert.equal(papa.times[1], 0);
   assert.equal(papa.paused[2], false);
   assert.deepEqual(papa.icons, ["▶️", "▶️", "⏸️"]);
-  assert.match(papa.sources[2], /audio_3\.(m4a|mp3)$/);
+  assert.match(papa.sources[2], /\/papa\.(m4a|mp3)$/);
   assert.equal(papa.paused[0], true);
   assert.equal(papa.melody, "stopped");
   const media = papa.starts.filter((s) => s.startsWith("media:"));
-  assert.deepEqual(media, ["media:audio_1", "media:audio_1", "media:audio_2", "media:audio_3"]);
+  assert.deepEqual(media, ["media:mama", "media:mama", "media:taya", "media:papa"]);
 
-  await evaluate(`document.getElementById("audio-3").dispatchEvent(new Event("ended"))`);
+  await evaluate(`document.getElementById("papa").dispatchEvent(new Event("ended"))`);
   const ended = await voiceState();
   assert.equal(ended.icons[2], "▶️");
   assert.equal(ended.active, "");
@@ -379,7 +378,7 @@ function waitFor(expression, timeout = 4000) {
 
 async function voiceState() {
   return evaluate(`(() => {
-    const audios = ["audio-1", "audio-2", "audio-3"].map((id) => document.getElementById(id));
+    const audios = ["mama", "taya", "papa"].map((id) => document.getElementById(id));
     const app = document.getElementById("app");
       return {
         melody: app.dataset.melody,
