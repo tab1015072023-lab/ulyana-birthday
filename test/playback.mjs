@@ -31,7 +31,10 @@ const server = http.createServer((req, res) => {
       ".m4a": "audio/mp4",
       ".mp3": "audio/mpeg",
       ".ogg": "audio/ogg",
-      ".ico": "image/x-icon"
+      ".ico": "image/x-icon",
+      ".jpg": "image/jpeg",
+      ".jpeg": "image/jpeg",
+      ".webp": "image/webp"
     };
     res.writeHead(200, { "Content-Type": types[ext] || "application/octet-stream" });
     res.end(data);
@@ -280,23 +283,24 @@ try {
   await new Promise((r) => setTimeout(r, 1200));
   const family = await evaluate(`(() => {
     const app = document.getElementById("app");
-    const svg = document.querySelector(".family");
-    const box = svg.getBoundingClientRect();
+    const img = document.querySelector("img.family");
+    const box = img.getBoundingClientRect();
     return {
       bell: app.dataset.bell,
       melody: app.dataset.melody,
       overlap: app.dataset.overlap,
-      figs: [...document.querySelectorAll(".fig")].map((n) => n.className.baseVal || n.className),
-      opacity: getComputedStyle(svg).opacity,
-      width: box.width
+      src: img.currentSrc || img.src,
+      opacity: getComputedStyle(img).opacity,
+      width: box.width,
+      height: box.height
     };
   })()`);
   assert.notEqual(family.bell, "playing");
   assert.equal(family.melody, "playing");
   assert.equal(family.overlap, "0");
-  assert.deepEqual(family.figs, ["fig fig-mum", "fig fig-taya", "fig fig-dad", "fig fig-dog", "fig fig-cat"]);
+  assert.match(family.src, /family\.(webp|jpe?g)$/);
   assert.ok(Number(family.opacity) > 0.9, "family did not appear in the doorway");
-  assert.ok(family.width > 80);
+  assert.ok(family.width > 80 && family.height > 120);
   await shoot("opened_mobile.png");
 
   await click('.voice[data-file="mama"]');
@@ -305,13 +309,13 @@ try {
     const app = document.getElementById("app");
     return !a.paused && app.dataset.melody === "stopped" && app.dataset.activeVoice === "mama";
   })()`), true, "mama did not start: " + JSON.stringify(await voiceState()));
-  assert.equal(await waitFor(`window.__ctx && window.__ctx.state === "closed"`), true, "melody context was not closed");
+  assert.equal(await waitFor(`window.__ctx && window.__ctx.state === "suspended"`), true, "melody context was not suspended");
   await new Promise((r) => setTimeout(r, 350));
   const mama = await voiceState();
   assert.equal(mama.melody, "stopped");
   assert.notEqual(mama.bell, "playing");
   assert.equal(mama.overlap, "0");
-  assert.equal(mama.context, "closed");
+  assert.equal(mama.context, "suspended");
   assert.equal(mama.icons[0], "⏸️");
   assert.equal(mama.icons[1], "▶️");
   assert.equal(mama.icons[2], "▶️");
@@ -328,16 +332,18 @@ try {
   await new Promise((r) => setTimeout(r, 250));
   const still = await voiceState();
   assert.equal(still.melody, "stopped", "melody resumed by itself");
-  assert.equal(still.context, "closed");
+  assert.equal(still.context, "suspended");
   assert.ok(still.starts.filter((s) => s === "audiocontext").length === 1);
 
   await click('.voice[data-file="mama"]');
-  assert.equal(await waitFor(`document.getElementById("mama").paused === true`), true, "pause did not apply");
+  assert.equal(await waitFor(`document.getElementById("mama").paused === true && document.getElementById("app").dataset.melody === "playing"`), true, "pause did not bring the melody back");
   const paused = await voiceState();
   assert.equal(paused.icons[0], "▶️");
   assert.equal(paused.paused[0], true);
   assert.ok(paused.times[0] > 0, "pause keeps the place");
-  assert.equal(paused.melody, "stopped");
+  assert.equal(paused.melody, "playing");
+  assert.equal(paused.context, "running");
+  assert.equal(paused.overlap, "0");
   const pausedAt = paused.times[0];
 
   await click('.voice[data-file="mama"]');
@@ -348,6 +354,7 @@ try {
   assert.equal(resumed.paused[0], false);
   assert.ok(resumed.times[0] + 0.05 >= pausedAt, "resume restarted instead of continuing");
   assert.equal(resumed.melody, "stopped");
+  assert.equal(resumed.context, "suspended");
 
   await click('.voice[data-file="taya"]');
   assert.equal(await waitFor(`!document.getElementById("taya").paused && document.getElementById("app").dataset.activeVoice === "taya"`), true, "taya did not start");
@@ -379,10 +386,13 @@ try {
   assert.deepEqual(media, ["media:mama", "media:mama", "media:taya", "media:papa"]);
 
   await evaluate(`document.getElementById("papa").dispatchEvent(new Event("ended"))`);
+  assert.equal(await waitFor(`document.getElementById("app").dataset.melody === "playing"`), true, "melody did not return when the voice ended");
   const ended = await voiceState();
   assert.equal(ended.icons[2], "▶️");
   assert.equal(ended.active, "");
-  assert.equal(ended.melody, "stopped");
+  assert.equal(ended.melody, "playing");
+  assert.equal(ended.paused[2], true);
+  assert.equal(ended.overlap, "0");
 
   await setViewport(1280, 800, false);
   await new Promise((r) => setTimeout(r, 200));
